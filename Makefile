@@ -2,7 +2,7 @@ CC = gcc
 CFLAGS = -Wall -Wextra -Werror -g
 DEPFLAGS = -MT $@ -MMD -MP -MF $(D)/$*.d
 
-SRC = main.c renderer.c
+SRC = main.c renderer.c map.c misc.c
 LIBS = -lopengl32 -lgdi32 -luser32
 BIN = c_ray.exe
 
