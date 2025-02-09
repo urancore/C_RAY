@@ -4,27 +4,41 @@ DEPFLAGS = -MT $@ -MMD -MP -MF $(D)/$*.d
 
 O = out
 D = $(O)/.deps
-
-SRC = main.c map.c misc.c renderer.c
 LIB = -lopengl32 -lgdi32 -luser32
-BIN = $(O)/c_ray.exe
 
-OBJS = $(SRC:%.c=$(O)/%.o)
-DEPS = $(SRC:%.c=$(D)/%.d)
+SRC_COMMON = global.c main.c map.c misc.c renderer.c
+SRC_RAY = ray.c
+SRC_EDITOR = editor.c
 
-.PHONY: all clean
+BIN_RAY = $(O)/ray.exe
+BIN_EDITOR = $(O)/editor.exe
 
-all: $(D) $(BIN)
-	$(BIN)
+OBJS_COMMON = $(SRC_COMMON:%.c=$(O)/%.o)
+DEPS = $(SRC_COMMON:%.c=$(D)/%.d)
+OBJS_RAY = $(SRC_RAY:%.c=$(O)/%.o)
+DEPS += $(SRC_RAY:%.c=$(D)/%.d)
+OBJS_EDITOR = $(SRC_EDITOR:%.c=$(O)/%.o)
+DEPS += $(SRC_EDITOR:%.c=$(D)/%.d)
+
+.PHONY: ray editor clean
+
+ray: $(D) $(BIN_RAY)
+	$(BIN_RAY)
+
+editor: $(D) $(BIN_EDITOR)
+	$(BIN_EDITOR)
 
 clean:
-	rm -f $(OBJS) $(DEPS) $(BIN)
+	rm -f $(OBJS_COMMON) $(OBJS_RAY) $(OBJS_EDITOR) $(DEPS) $(BIN_RAY) $(BIN_EDITOR)
 
 $(D):
 	mkdir -p $(D)
 
-$(BIN): $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) $(LIB) -o $(BIN)
+$(BIN_RAY): $(OBJS_COMMON) $(OBJS_RAY)
+	$(CC) $(CFLAGS) $(OBJS_COMMON) $(OBJS_RAY) $(LIB) -o $(BIN_RAY)
+
+$(BIN_EDITOR): $(OBJS_COMMON) $(OBJS_EDITOR)
+	$(CC) $(CFLAGS) $(OBJS_COMMON) $(OBJS_EDITOR) $(LIB) -o $(BIN_EDITOR)
 
 $(O)/%.o: %.c $(D)/%.d
 	$(CC) $(DEPFLAGS) $(CFLAGS) -c $< -o $@
