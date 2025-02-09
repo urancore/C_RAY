@@ -64,37 +64,45 @@ void init_player()
 	player.width = 10;
 	player.height = 10;
 }
-
-void cast_ray(float angle, float *end_x, float *end_y)
+void cast_ray(float angle, float *distance, int *map_x, int *map_y)
 {
-	// Нормализуем угол
-	while (angle < 0) angle += 2 * PI;
-	while (angle >= 2 * PI) angle -= 2 * PI;
+    float sin_a = sinf(angle);
+    float cos_a = cosf(angle);
 
-	float ray_x = player.pos.x + player.width / 2;
-	float ray_y = player.pos.y + player.height / 2;
-	float ray_dir_x = cosf(angle);
-	float ray_dir_y = sinf(angle);
-	float step = 1.0f;
+    float ray_x = player.pos.x + player.width / 2;
+    float ray_y = player.pos.y + player.height / 2;
 
-	while (1) {
-		ray_x += ray_dir_x * step;
-		ray_y += ray_dir_y * step;
+    float x_step = (cos_a >= 0) ? 1 : -1;
+    float y_step = (sin_a >= 0) ? 1 : -1;
 
-		int map_x = (int)ray_x / BLOCK_SIZE;
-		int map_y = (int)ray_y / BLOCK_SIZE;
+    float x_dist = (x_step > 0) ? ((int)(ray_x / BLOCK_SIZE + 1) * BLOCK_SIZE - ray_x) : (ray_x - (int)(ray_x / BLOCK_SIZE) * BLOCK_SIZE);
+    float y_dist = (y_step > 0) ? ((int)(ray_y / BLOCK_SIZE + 1) * BLOCK_SIZE - ray_y) : (ray_y - (int)(ray_y / BLOCK_SIZE) * BLOCK_SIZE);
 
-		if (map_x < 0 || map_x >= MAP_WIDTH || map_y < 0 || map_y >= MAP_HEIGHT) {
-			break;
-		}
+    float x_ray_len = (cos_a != 0) ? fabsf(x_dist / cos_a) : 1e30f;
+    float y_ray_len = (sin_a != 0) ? fabsf(y_dist / sin_a) : 1e30f;
 
-		if (map[map_y][map_x] == 1) {
-			break;
-		}
-	}
+    while (1) {
+        if (x_ray_len < y_ray_len) {
+            ray_x += x_step * BLOCK_SIZE;
+            *distance = x_ray_len;
+            x_ray_len += fabsf(BLOCK_SIZE / cos_a);
+        } else {
+            ray_y += y_step * BLOCK_SIZE;
+            *distance = y_ray_len;
+            y_ray_len += fabsf(BLOCK_SIZE / sin_a);
+        }
 
-	*end_x = ray_x;
-	*end_y = ray_y;
+        *map_x = (int)ray_x / BLOCK_SIZE;
+        *map_y = (int)ray_y / BLOCK_SIZE;
+
+        if (*map_x < 0 || *map_x >= MAP_WIDTH || *map_y < 0 || *map_y >= MAP_HEIGHT) {
+            break;
+        }
+
+        if (map[*map_y][*map_x] == 1) {
+            break;
+        }
+    }
 }
 
 void move_player(Rect *player, float angle, float speed)
@@ -152,7 +160,6 @@ void R_Render(void)
 	glClear(GL_COLOR_BUFFER_BIT);
 	check_keys();
 
-	// Define fullscreen view area
 	int view_width = WW;
 	int view_height = WH;
 	Rect sky = {{0, 0}, view_width, view_height / 2};
@@ -161,46 +168,37 @@ void R_Render(void)
 	r_drawRect(&ground, DOOM_FLOOR);
 	r_drawRect(&sky, DOOM_CEILING);
 
-	float ray_angle;
-	float end_x, end_y;
-	float player_center_x = player.pos.x + player.width / 2;
-	float player_center_y = player.pos.y + player.height / 2;
+    for (int i = 0; i < NUM_RAYS; i++)
+    {
+        float ray_angle = player_angle - fov / 2 + (fov * i) / NUM_RAYS;
+        float distance;
+        int map_x, map_y;
+        cast_ray(ray_angle, &distance, &map_x, &map_y);
 
-	for (int i = 0; i < NUM_RAYS; i++)
-	{
-		ray_angle = player_angle - fov / 2 + (fov * i) / NUM_RAYS;
-		cast_ray(ray_angle, &end_x, &end_y);
 
-		// Calculate distance to wall (use Euclidean distance)
-		float distance = sqrtf((end_x - player_center_x) * (end_x - player_center_x) +
-				(end_y - player_center_y) * (end_y - player_center_y));
+        distance *= cosf(ray_angle - player_angle);
 
-		// Apply fish-eye correction
-		distance *= cosf(ray_angle - player_angle);
+        float wall_height = (BLOCK_SIZE / distance) * ((view_width / 2) / tanf(fov / 2));
 
-		// Calculate wall height
-		float wall_height = (BLOCK_SIZE / distance) * ((view_width / 2) / tanf(fov / 2));
+        int wall_top = (view_height / 2) - (wall_height / 2);
+        int wall_bottom = (view_height / 2) + (wall_height / 2);
 
-		// Calculate drawing positions
-		int wall_top = (view_height / 2) - (wall_height / 2);
-		int wall_bottom = (view_height / 2) + (wall_height / 2);
 
-		// Clamp values
-		if (wall_top < 0) wall_top = 0;
-		if (wall_bottom >= view_height) wall_bottom = view_height - 1;
+        if (wall_top < 0) wall_top = 0;
+        if (wall_bottom >= view_height) wall_bottom = view_height - 1;
 
-		// Calculate color based on distance
-		float shade = 1.0f - fminf(distance / 500.0f, 0.8f);
-		Color wall_color = DOOM_WALL;
 
-		wall_color.r *= shade;
-		wall_color.g *= shade;
-		wall_color.b *= shade;
+        float shade = 1.0f - fminf(distance / 500.0f, 0.8f);
+        Color wall_color = DOOM_WALL;
 
-		// Draw vertical line for this ray
-		int x = i * view_width / NUM_RAYS;
-		r_drawLine(x, wall_top, x, wall_bottom, 32.0f, wall_color);
-	}
+        wall_color.r *= shade;
+        wall_color.g *= shade;
+        wall_color.b *= shade;
+
+        int x = i * view_width / NUM_RAYS;
+        r_drawLine(x, wall_top, x, wall_bottom, 5.0f, wall_color);
+
+    }
 
 	// Draw crosshair
 	int crosshair_size = 10;
