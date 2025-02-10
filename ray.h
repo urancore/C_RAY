@@ -9,6 +9,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "bind.h"
+
 #define WHITE         (Color){1.0f, 1.0f, 1.0f}
 #define BLACK         (Color){0.0f, 0.0f, 0.0f}
 #define RED           (Color){1.0f, 0.0f, 0.0f}
