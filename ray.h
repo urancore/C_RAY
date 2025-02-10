@@ -23,29 +23,36 @@
 #define DOOM_CEILING  (Color){0.07f, 0.07f, 0.14f}  // Very dark blue (almost black)
 
 typedef struct {
-    float r;
-    float g;
-    float b;
+	float r;
+	float g;
+	float b;
 } Color;
 
-typedef struct types
-{
-    int x;
-    int y;
+typedef struct {
+	float x;
+	float y;
 } Position;
 
-typedef struct
-{
-    Position pos;
-    int width;
-    int height;
+typedef struct {
+	Position pos;
+	float width;
+	float height;
 } Rect;
 
-typedef struct
-{
-    Position pos;
-    int radius;
+typedef struct {
+	Position pos;
+	float radius;
 } Circle;
+
+typedef struct {
+	Position pos;
+	float angle;
+	float fov;
+	float height;
+	float sensitivity;
+	float speed;
+	float width;
+} Player;
 
 #define MAP_HEIGHT  20
 #define MAP_WIDTH   20
@@ -63,16 +70,13 @@ extern HWND window;
 extern HDC hdc;
 extern HGLRC hrc;
 
-extern float player_angle;
-extern float fov; // 60 degrees field of view
 extern int last_mouse_x;
-extern float sensitivity;
-extern Rect player;
+extern Player player;
 
 // input.c
 void check_keys(void);
 void handle_mouse_movement(void);
-void move_player(Rect *player, float angle, float speed);
+void move_player(float angle);
 
 // main.c
 void HandleMouseClick(int x, int y);
@@ -84,7 +88,7 @@ void load_map(void);
 void save_map(void);
 
 // misc.c
-int check_collision(int x, int y);
+int check_collision(float x, float y);
 
 // renderer.c
 void r_drawRect(Rect *rect, Color color);

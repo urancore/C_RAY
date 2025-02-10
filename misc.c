@@ -1,6 +1,6 @@
 #include "ray.h"
 
-int check_collision(int x, int y)
+int check_collision(float x, float y)
 {
 	int map_x = x / BLOCK_SIZE;
 	int map_y = y / BLOCK_SIZE;

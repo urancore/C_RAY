@@ -83,12 +83,12 @@ void R_Render(void)
 	r_drawRect(&sky, DOOM_CEILING);
 
 	for (int i = 0; i < NUM_RAYS; i++) {
-		float ray_angle = player_angle - fov / 2 + (fov * i) / NUM_RAYS;
+		float ray_angle = player.angle - player.fov / 2 + (player.fov * i) / NUM_RAYS;
 		float distance = cast_ray(ray_angle);
 
-		distance *= cosf(ray_angle - player_angle);
+		distance *= cosf(ray_angle - player.angle);
 
-		float wall_height = (BLOCK_SIZE / distance) * ((view_width / 2) / tanf(fov / 2));
+		float wall_height = (BLOCK_SIZE / distance) * ((view_width / 2) / tanf(player.fov / 2));
 
 		int wall_top = (view_height / 2) - (wall_height / 2);
 		int wall_bottom = (view_height / 2) + (wall_height / 2);
@@ -118,15 +118,13 @@ void R_Render(void)
 
 	// Horizontal line
 	r_drawLine(center_x - crosshair_size, center_y,
-			center_x + crosshair_size, center_y,
-			crosshair_thickness, WHITE);
+		center_x + crosshair_size, center_y,
+		crosshair_thickness, WHITE);
 
 	// Vertical line
 	r_drawLine(center_x, center_y - crosshair_size,
-			center_x, center_y + crosshair_size,
-			crosshair_thickness, WHITE);
-
-
+		center_x, center_y + crosshair_size,
+		crosshair_thickness, WHITE);
 
 	// Draw mini-map
 	int map_size = WH / 3;  // Set the size of the mini-map
@@ -136,17 +134,17 @@ void R_Render(void)
 
 	// Draw player on mini-map
 	float scale = (float)map_size / (MAP_WIDTH * BLOCK_SIZE);
-	Rect mini_player = {
-		{mini_map.pos.x + player.pos.x * scale, mini_map.pos.y + player.pos.y * scale},
-		player.width * scale,
-		player.height * scale
-	};
+	Rect mini_player;
+	mini_player.pos.x = mini_map.pos.x + player.pos.x * scale;
+	mini_player.pos.y = mini_map.pos.y + player.pos.y * scale;
+	mini_player.width = player.width * scale;
+	mini_player.height = player.height * scale;
 	r_drawRect(&mini_player, RED);
 
 	// Draw player direction on mini-map
 	float dir_length = 20.0f * scale;
-	float dir_end_x = mini_player.pos.x + cosf(player_angle) * dir_length;
-	float dir_end_y = mini_player.pos.y + sinf(player_angle) * dir_length;
+	float dir_end_x = mini_player.pos.x + cosf(player.angle) * dir_length;
+	float dir_end_y = mini_player.pos.y + sinf(player.angle) * dir_length;
 	r_drawLine(mini_player.pos.x, mini_player.pos.y, dir_end_x, dir_end_y, 2.0f, GREEN);
 	SwapBuffers(hdc);
 }
@@ -160,14 +158,11 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 	case WM_DESTROY:
 		return 0;
 	case WM_ACTIVATE:
-		if (LOWORD(wparam) != WA_INACTIVE)
-		{
-			// Захват мыши при активации окна
+		if (LOWORD(wparam) != WA_INACTIVE) {
+			// capture mouse on window activation
 			SetCapture(hwnd);
 			ShowCursor(FALSE);
-		}
-		else
-		{
+		} else {
 			ReleaseCapture();
 			ShowCursor(TRUE);
 		}
@@ -185,8 +180,12 @@ int main()
 
 	player.pos.x = 100;
 	player.pos.y = 100;
-	player.width = 10;
+	player.angle = 0;
+	player.fov = PI / 2; // 90 fov
 	player.height = 10;
+	player.sensitivity = 0.003;
+	player.speed = 0.5;
+	player.width = 10;
 
 	RECT rect;
 	GetClientRect(window, &rect);
