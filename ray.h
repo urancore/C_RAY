@@ -54,12 +54,25 @@ typedef struct
 #define WW 1024
 #define WH 512
 
+#define NUM_RAYS 264
+
 // global vars declared in global.c
 // keep in sync
 extern unsigned char map[MAP_HEIGHT][MAP_WIDTH];
 extern HWND window;
 extern HDC hdc;
 extern HGLRC hrc;
+
+extern float player_angle;
+extern float fov; // 60 degrees field of view
+extern int last_mouse_x;
+extern float sensitivity;
+extern Rect player;
+
+// input.c
+void check_keys(void);
+void handle_mouse_movement(void);
+void move_player(Rect *player, float angle, float speed);
 
 // main.c
 void HandleMouseClick(int x, int y);
