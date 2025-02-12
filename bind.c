@@ -38,6 +38,11 @@ void clip_cursor(void)
 	cursor_enabled = !cursor_enabled;
 }
 
+void test_btn(void)
+{
+	flashbang_duration = 1.0f;
+}
+
 void quit_game(void)
 {
     PostQuitMessage(0);

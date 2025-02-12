@@ -4,7 +4,7 @@ static void r_drawQuad(int x, int y, int width, int height, Color color)
 {
 	if (width <= 0 || height <= 0) return; // error
 
-	glColor3f((GLfloat)color.r, (GLfloat)color.g, (GLfloat)color.b);
+	glColor4f((GLfloat)color.r, (GLfloat)color.g, (GLfloat)color.b, (GLfloat)color.alpha);
 	glBegin(GL_QUADS);
 	glVertex2i(x, y);
 	glVertex2i(x + width, y);
@@ -64,4 +64,23 @@ void r_drawMap(unsigned char map[MAP_HEIGHT][MAP_WIDTH], Rect* mapArea)
 			r_drawPoint(draw_x, draw_y, block_size, color);
 		}
 	}
+}
+
+
+void flashbang(float flash_duration) // test_1234
+{
+	(void)flash_duration;
+
+	Rect rect;
+	rect.pos.x = 0;
+	rect.pos.y = 0;
+	rect.width = WW;
+	rect.height = WH;
+
+	Color color;
+	color.r = 1.0f;
+	color.g = 1.0f;
+	color.b = 1.0f;
+	color.alpha = flash_duration;
+	r_drawRect(&rect, color);
 }

@@ -11,23 +11,24 @@
 
 #include "bind.h"
 
-#define WHITE         (Color){1.0f, 1.0f, 1.0f}
-#define BLACK         (Color){0.0f, 0.0f, 0.0f}
-#define RED           (Color){1.0f, 0.0f, 0.0f}
-#define GREEN         (Color){0.0f, 1.0f, 0.0f}
-#define BLUE          (Color){0.0f, 0.0f, 1.0f}
-#define BROWN         (Color){0.6f, 0.4f, 0.2f}
-#define GROUND_GREEN  (Color){0.0f, 0.5f, 0.0f}
-#define SKY_BLUE      (Color){0.5f, 0.8f, 1.0f}
+#define WHITE         (Color){1.0f, 1.0f, 1.0f, 1.0f}
+#define BLACK         (Color){0.0f, 0.0f, 0.0f, 1.0f}
+#define RED           (Color){1.0f, 0.0f, 0.0f, 1.0f}
+#define GREEN         (Color){0.0f, 1.0f, 0.0f, 1.0f}
+#define BLUE          (Color){0.0f, 0.0f, 1.0f, 1.0f}
+#define BROWN         (Color){0.6f, 0.4f, 0.2f, 1.0f}
+#define GROUND_GREEN  (Color){0.0f, 0.5f, 0.0f, 1.0f}
+#define SKY_BLUE      (Color){0.5f, 0.8f, 1.0f, 1.0f}
 
-#define DOOM_WALL     (Color){0.56f, 0.51f, 0.44f}  // Grayish-brown
-#define DOOM_FLOOR    (Color){0.38f, 0.27f, 0.18f}  // Dark brown
-#define DOOM_CEILING  (Color){0.07f, 0.07f, 0.14f}  // Very dark blue (almost black)
+#define DOOM_WALL     (Color){0.56f, 0.51f, 0.44f, 1.0f}  // Grayish-brown
+#define DOOM_FLOOR    (Color){0.38f, 0.27f, 0.18f, 1.0f}  // Dark brown
+#define DOOM_CEILING  (Color){0.07f, 0.07f, 0.14f, 1.0f}  // Very dark blue (almost black)
 
 typedef struct {
 	float r;
 	float g;
 	float b;
+	float alpha;
 } Color;
 
 typedef struct {
@@ -75,6 +76,7 @@ extern HGLRC hrc;
 extern int last_mouse_x;
 extern char cursor_enabled;
 extern KeyBind key_bindings[];
+extern float flashbang_duration; // test_1234
 
 extern Player player;
 
@@ -101,5 +103,6 @@ void r_drawRect(Rect *rect, Color color);
 void r_drawPoint(int x, int y, int size, Color color);
 void r_drawLine(int start_x, int start_y, int end_x, int end_y, float line_size, Color color);
 void r_drawMap(unsigned char map[MAP_HEIGHT][MAP_WIDTH], Rect* mapArea);
+void flashbang(float flash_duration); // test_1234
 
 #endif /* _RAY_H */

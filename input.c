@@ -6,6 +6,7 @@ KeyBind key_bindings[] = {
     {0x44, 		strafe_right, 	1, 0},    	// D key
     {0x41, 		strafe_left, 	1, 0},     	// A key
 	{0x45, 		clip_cursor, 	0, 0},		// E key курсор показывается через !!!!несколько (2) сек!!!! хз, ограничения winapi, может быть.
+	{0x46, 		test_btn,		0, 0},		// test_1234 F key
     {VK_ESCAPE, quit_game, 		0, 0}		// ESC key
 };
 

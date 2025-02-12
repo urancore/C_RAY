@@ -19,6 +19,7 @@ void strafe_left(void);
 void rotate_left(void);
 void rotate_right(void);
 void clip_cursor(void);
+void test_btn(void); // test_1234
 void quit_game(void);
 
 

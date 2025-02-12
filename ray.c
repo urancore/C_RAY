@@ -1,5 +1,7 @@
 #include "ray.h"
 
+Color flash_color;
+
 unsigned char map[MAP_HEIGHT][MAP_WIDTH] = {
 	{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
 	{1,0,1,0,1,0,0,0,0,1,0,0,0,0,0,1,0,0,0,1},
@@ -70,6 +72,9 @@ float cast_ray(float angle)
 
 void R_Render(void)
 {
+	glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	glClearColor(0, 0, 0, 1);
 	glClear(GL_COLOR_BUFFER_BIT);
 	handle_keys_event();
@@ -127,6 +132,12 @@ void R_Render(void)
 		crosshair_thickness, WHITE);
 
 	draw_mini_map(3, RED, BLUE);
+
+
+    if (flashbang_duration > 0.0f) {
+        flashbang(flashbang_duration);
+    }
+
 	SwapBuffers(hdc);
 }
 
@@ -138,16 +149,6 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 		break;
 	case WM_DESTROY:
 		return 0;
-	// case WM_ACTIVATE:
-	// 	if (LOWORD(wparam) != WA_INACTIVE) {
-	// 		// capture mouse on window activation
-	// 		SetCapture(hwnd);
-	// 		ShowCursor(FALSE);
-	// 	} else {
-	// 		ReleaseCapture();
-	// 		ShowCursor(TRUE);
-	// 	}
-	// 	break;
 	default:
 		return DefWindowProcA(hwnd, msg, wparam, lparam);
 	}
@@ -156,7 +157,9 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 
 int main()
 {
+
 	WNDCLASSA wcl;
+
 	memset(&wcl, 0, sizeof(wcl));
 
 	player.pos.x = 100;
@@ -197,6 +200,15 @@ int main()
 		} else {
 			handle_mouse_movement();
 			R_Render();
+
+			if (flashbang_duration > 0.0f) {
+				flashbang_duration -= 0.0004f; // Decrease by a small amount each frame
+				if (flashbang_duration < 0.0f) {
+					flashbang_duration = 0.0f;
+				}
+
+				flash_color.alpha = flashbang_duration; // Update the alpha value
+			}
 		}
 	}
 
