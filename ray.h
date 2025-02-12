@@ -50,10 +50,10 @@ typedef struct {
 	Position pos;
 	float angle;
 	float fov;
-	float height;
 	float sensitivity;
 	float speed;
 	float width;
+	float height;
 } Player;
 
 #define MAP_HEIGHT  20
@@ -73,10 +73,12 @@ extern HDC hdc;
 extern HGLRC hrc;
 
 extern int last_mouse_x;
+extern KeyBind key_bindings[];
+
 extern Player player;
 
 // input.c
-void check_keys(void);
+void handle_keys_event(void);
 void handle_mouse_movement(void);
 void move_player(float angle);
 
@@ -88,6 +90,7 @@ void GL_Shutdown(void);
 // map.c
 void load_map(void);
 void save_map(void);
+void draw_mini_map(int size, Color player_color, Color player_line);
 
 // misc.c
 int check_collision(float x, float y);

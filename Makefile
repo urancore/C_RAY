@@ -6,7 +6,7 @@ O = out
 D = $(O)/.deps
 LIB = -lopengl32 -lgdi32 -luser32
 
-SRC_COMMON = input.c global.c main.c map.c misc.c renderer.c
+SRC_COMMON = bind.c input.c global.c main.c map.c misc.c renderer.c
 SRC_RAY = ray.c
 SRC_EDITOR = editor.c
 

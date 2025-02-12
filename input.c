@@ -1,29 +1,23 @@
 #include "ray.h"
 
-void check_keys(void)
+KeyBind key_bindings[] = {
+    {0x57, 		move_forward, 	1},    	// W key
+    {0x53, 		move_backward, 	1},   	// S key
+    {0x44, 		strafe_right, 	1},    	// D key
+    {0x41, 		strafe_left, 	1},     // A key
+    {0x51, 		rotate_left, 	1},     // Q key
+    {0x45, 		rotate_right, 	1},    	// E key
+    {VK_ESCAPE, quit_game, 		0}		// ESC key
+};
+
+
+void handle_keys_event(void)
 {
-	if (GetAsyncKeyState(0x57) & 0x8000) { // W key (forward)
-		move_player(player.angle);
-	}
-	if (GetAsyncKeyState(0x53) & 0x8000) { // S key (backward)
-		move_player(player.angle + PI);
-	}
-	if (GetAsyncKeyState(0x44) & 0x8000) { // D key (strafe right)
-		move_player(player.angle + PI/2);
-	}
-	if (GetAsyncKeyState(0x41) & 0x8000) { // A key (strafe left)
-		move_player(player.angle - PI/2);
-	}
-	if (GetAsyncKeyState(0x51) & 0x8000) { // Q key (rotate left)
-		player.angle -= 0.1;
-		if (player.angle < 0) player.angle += 2 * PI;
-	}
-	if (GetAsyncKeyState(0x45) & 0x8000) { // E key (rotate right)
-		player.angle += 0.1;
-		if (player.angle >= 2 * PI) player.angle -= 2 * PI;
-	}
-	if (GetAsyncKeyState(VK_ESCAPE) & 0x8000) {
-		PostQuitMessage(0);
+	int key_binds_list_size = sizeof(key_bindings) / sizeof(key_bindings[0]);
+	for (int i = 0; i < key_binds_list_size; i++) {
+		if (GetAsyncKeyState(key_bindings[i].key_code) & 0x8000) {
+			key_bindings[i].action();
+		}
 	}
 }
 
