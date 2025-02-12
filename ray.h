@@ -73,6 +73,7 @@ extern HDC hdc;
 extern HGLRC hrc;
 
 extern int last_mouse_x;
+extern char cursor_enabled;
 extern KeyBind key_bindings[];
 
 extern Player player;

@@ -7,6 +7,7 @@ typedef struct
 	int key_code;
     void (*action)(void);
     char is_continuous;
+	char is_pressed;
 } KeyBind;
 
 extern KeyBind key_bindings[];
@@ -17,6 +18,7 @@ void strafe_right(void);
 void strafe_left(void);
 void rotate_left(void);
 void rotate_right(void);
+void clip_cursor(void);
 void quit_game(void);
 
 

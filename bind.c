@@ -33,9 +33,12 @@ void rotate_right(void)
     if (player.angle >= 2 * PI) player.angle -= 2 * PI;
 }
 
+void clip_cursor(void)
+{
+	cursor_enabled = !cursor_enabled;
+}
+
 void quit_game(void)
 {
     PostQuitMessage(0);
 }
-
-

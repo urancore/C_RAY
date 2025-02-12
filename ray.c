@@ -138,16 +138,16 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 		break;
 	case WM_DESTROY:
 		return 0;
-	case WM_ACTIVATE:
-		if (LOWORD(wparam) != WA_INACTIVE) {
-			// capture mouse on window activation
-			SetCapture(hwnd);
-			ShowCursor(FALSE);
-		} else {
-			ReleaseCapture();
-			ShowCursor(TRUE);
-		}
-		break;
+	// case WM_ACTIVATE:
+	// 	if (LOWORD(wparam) != WA_INACTIVE) {
+	// 		// capture mouse on window activation
+	// 		SetCapture(hwnd);
+	// 		ShowCursor(FALSE);
+	// 	} else {
+	// 		ReleaseCapture();
+	// 		ShowCursor(TRUE);
+	// 	}
+	// 	break;
 	default:
 		return DefWindowProcA(hwnd, msg, wparam, lparam);
 	}
