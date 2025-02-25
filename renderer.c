@@ -6,10 +6,10 @@ static void r_drawQuad(int x, int y, int width, int height, Color color)
 
 	glColor4f((GLfloat)color.r, (GLfloat)color.g, (GLfloat)color.b, (GLfloat)color.alpha);
 	glBegin(GL_QUADS);
-	glVertex2i(x, y);
-	glVertex2i(x + width, y);
-	glVertex2i(x + width, y + height);
-	glVertex2i(x, y + height);
+	glVertex2i((GLint)x, (GLint)y);
+	glVertex2i((GLint)x + (GLint)width, (GLint)y);
+	glVertex2i((GLint)x + (GLint)width, (GLint)y + (GLint)height);
+	glVertex2i((GLint)x, (GLint)y + (GLint)height);
 	glEnd();
 }
 
@@ -38,36 +38,65 @@ void r_drawLine(int start_x, int start_y, int end_x, int end_y, float line_size,
 	glEnd();
 }
 
-void r_drawMap(unsigned char map[MAP_HEIGHT][MAP_WIDTH], Rect* mapArea)
+void r_drawMap(GameObject map[MAP_HEIGHT][MAP_WIDTH], Rect* mapArea)
 {
-	Color color;
-	float scale_x = (float)mapArea->width / (MAP_WIDTH * BLOCK_SIZE);
-	float scale_y = (float)mapArea->height / (MAP_HEIGHT * BLOCK_SIZE);
-	float scale = (scale_x < scale_y) ? scale_x : scale_y;  // Use the smaller scale to fit the map
+    Color color;
+    float scale_x = (float)mapArea->width / MAP_WIDTH;
+    float scale_y = (float)mapArea->height / MAP_HEIGHT;
+    float scale = (scale_x < scale_y) ? scale_x : scale_y;
 
-	for (int y = 0; y < MAP_HEIGHT; y++) {
-		for (int x = 0; x < MAP_WIDTH; x++) {
-			if (map[y][x] == 0) {
-				color.r = 0.0f;
-				color.g = 0.0f;
-				color.b = 0.0f;
-			} else {
-				color.r = 1.0f;
-				color.g = 1.0f;
-				color.b = 1.0f;
+    for (int y = 0; y < MAP_HEIGHT; y++) {
+        for (int x = 0; x < MAP_WIDTH; x++) {
+			switch (map[y][x].type) {
+			case FLOOR:
+				color = C_RAY_FLOOR;
+				break;
+			case WALL:
+				color = C_RAY_WALL;
+				break;
+			case TRIGGER:
+				color = YELLOW;
+				break;
+			case DOOR:
+				color = GRAY;
+				break;
+			default:
+				color = PURPLE;
+				break;
 			}
+            // if (map[y][x].type == FLOOR) {
+            //     color.r = 0.2f;  // Темно-серый для пола
+            //     color.g = 0.2f;
+            //     color.b = 0.2f;
+            // } else if  {
+            //     color.r = 0.5f;  // Фиолетовый для стен
+            //     color.g = 0.8f;
+            //     color.b = 0.5f;
+            // }
 
-			float block_size = BLOCK_SIZE * scale;
-			float draw_x = mapArea->pos.x + x * block_size;
-			float draw_y = mapArea->pos.y + y * block_size;
+            float draw_x = mapArea->pos.x + x * scale;
+            float draw_y = mapArea->pos.y + y * scale;
 
-			r_drawPoint(draw_x, draw_y, block_size, color);
-		}
-	}
+            r_drawPoint(draw_x, draw_y, scale, color);
+        }
+    }
+}
+
+void r_drawSky(int view_width, int view_height)
+{
+	Rect sky = {{0, 0}, view_width, view_height / 2};
+
+	r_drawRect(&sky, C_RAY_CEILING);
+}
+
+void r_drawGround(int view_width, int view_height)
+{
+	Rect ground = {{0, view_height / 2}, view_width, view_height / 2};
+	r_drawRect(&ground, C_RAY_FLOOR);
 }
 
 
-void flashbang(float flash_duration) // test_1234
+void e_flashbang(float flash_duration) // test_1234
 {
 	(void)flash_duration;
 

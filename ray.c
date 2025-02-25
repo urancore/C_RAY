@@ -1,28 +1,43 @@
 #include "ray.h"
+// DEFINES_type (Wall, Floor)
+#define D_W (GameObject){.type=WALL}
+#define D_F (GameObject){.type=FLOOR}
+// #define D_T (GameObject){.type=TRIGGER, .trigger_data= {.target_entity}}
+// #define D_D (GameObject){.type=DOOR, .door_data= {.is_locked = 0, .key_id = 0}}
 
 Color flash_color;
 
-unsigned char map[MAP_HEIGHT][MAP_WIDTH] = {
-	{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-	{1,0,1,0,1,0,0,0,0,1,0,0,0,0,0,1,0,0,0,1},
-	{1,0,1,0,1,0,0,0,0,1,0,0,0,0,0,1,0,0,0,1},
-	{1,0,1,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1},
-	{1,0,1,0,1,0,0,0,0,1,0,0,0,0,0,1,0,0,0,1},
-	{1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,1},
-	{1,0,0,0,0,1,0,0,0,1,0,0,0,0,0,1,0,0,0,1},
-	{1,1,1,0,0,1,0,0,0,1,0,0,0,0,0,1,0,0,0,1},
-	{1,1,0,1,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,1},
-	{1,1,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1},
-	{1,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1},
-	{1,1,1,0,0,1,1,1,1,1,0,0,0,0,0,0,0,0,0,1},
-	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-	{1,0,0,1,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,1},
-	{1,0,0,1,0,0,1,0,0,1,0,0,0,0,0,1,0,0,0,1},
-	{1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,1,0,0,0,1},
-	{1,0,0,0,0,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1},
-	{1,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1},
-	{1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1},
-	{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+GameObject map[MAP_HEIGHT][MAP_WIDTH] = {
+	{D_W,D_W,D_W,D_W,D_W,D_W,D_W,D_W,D_W,D_W},
+	{D_W,D_F,D_F,D_W,D_F,D_F,D_W,D_F,D_W,D_W},
+	{D_W,D_F,D_F,D_F,D_F,D_F,D_F,D_F,D_F,D_W},
+	{D_W,D_F,D_F,D_W,D_F,D_W,D_F,D_W,D_F,D_W},
+	{D_W,D_F,D_F,D_F,D_F,D_W,D_F,D_W,D_F,D_W},
+	{D_W,D_F,D_F,D_F,D_F,D_F,D_F,D_F,D_F,D_W},
+	{D_W,D_F,D_W,D_F,D_F,D_W,D_F,D_W,D_F,D_W},
+	{D_W,D_F,D_W,D_W,D_F,D_W,D_F,D_W,D_F,D_W},
+	{D_W,D_F,D_F,D_F,D_F,D_F,D_F,D_F,D_F,D_W},
+	{D_W,D_W,D_W,D_W,D_W,D_F,D_W,D_F,D_W,D_W},
+	{D_W,D_W,D_W,D_W,D_W,D_F,D_W,D_F,D_W,D_W},
+	{D_W,D_W,D_W,D_W,D_W,D_F,D_W,D_F,D_W,D_W},
+	{D_W,D_F,D_F,D_F,D_W,D_F,D_W,D_F,D_W,D_W},
+	{D_W,D_F,D_W,D_F,D_W,D_F,D_W,D_F,D_F,D_W},
+	{D_W,D_F,D_F,D_F,D_W,D_F,D_W,D_F,D_W,D_W},
+	{D_W,D_W,D_F,D_F,D_F,D_F,D_W,D_F,D_W,D_W},
+	{D_W,D_F,D_F,D_F,D_W,D_F,D_F,D_F,D_F,D_W},
+	{D_W,D_F,D_W,D_F,D_W,D_F,D_W,D_W,D_F,D_W},
+	{D_W,D_F,D_W,D_W,D_W,D_F,D_W,D_W,D_F,D_W},
+	{D_W,D_F,D_F,D_F,D_F,D_F,D_W,D_W,D_F,D_W},
+	{D_W,D_W,D_F,D_F,D_F,D_F,D_F,D_F,D_F,D_W},
+	{D_W,D_W,D_F,D_W,D_F,D_W,D_W,D_W,D_F,D_W},
+	{D_W,D_W,D_F,D_W,D_F,D_W,D_W,D_W,D_F,D_W},
+	{D_W,D_W,D_F,D_W,D_F,D_F,D_F,D_F,D_F,D_W},
+	{D_W,D_W,D_F,D_W,D_F,D_W,D_W,D_W,D_F,D_W},
+	{D_W,D_F,D_F,D_W,D_F,D_W,D_W,D_W,D_F,D_W},
+	{D_W,D_F,D_F,D_W,D_F,D_F,D_F,D_F,D_F,D_W},
+	{D_W,D_F,D_F,D_F,D_F,D_W,D_W,D_W,D_W,D_W},
+	{D_W,D_F,D_W,D_F,D_F,D_F,D_F,D_F,D_F,D_W},
+	{D_W,D_W,D_W,D_W,D_W,D_W,D_W,D_W,D_W,D_W},
 };
 
 float cast_ray(float angle)
@@ -62,7 +77,7 @@ float cast_ray(float angle)
 			break;
 		}
 
-		if (map[map_y][map_x]) {
+		if (map[map_y][map_x].type == WALL) {
 			break;
 		}
 	}
@@ -77,17 +92,17 @@ void R_Render(void)
 
 	glClearColor(0, 0, 0, 1);
 	glClear(GL_COLOR_BUFFER_BIT);
-	handle_keys_event();
 
 	int view_width = WW;
 	int view_height = WH;
-	Rect sky = {{0, 0}, view_width, view_height / 2};
-	Rect ground = {{0, view_height / 2}, view_width, view_height / 2};
 
-	r_drawRect(&ground, DOOM_FLOOR);
-	r_drawRect(&sky, DOOM_CEILING);
+	r_drawSky(view_width, view_height);
+	r_drawGround(view_width, view_height);
+
+	i_handle_keys_event();
 
 	for (int i = 0; i < NUM_RAYS; i++) {
+
 		float ray_angle = player.angle - player.fov / 2 + (player.fov * i) / NUM_RAYS;
 		float distance = cast_ray(ray_angle);
 
@@ -104,20 +119,20 @@ void R_Render(void)
 
 
 		float shade = 1.0f - fminf(distance / 500.0f, 0.8f);
-		Color wall_color = DOOM_WALL;
+		Color wall_color = C_RAY_WALL;
 
 		wall_color.r *= shade;
 		wall_color.g *= shade;
 		wall_color.b *= shade;
 
 		int x = i * view_width / NUM_RAYS;
-		r_drawLine(x, wall_top, x, wall_bottom, 5.0f, wall_color);
+		r_drawLine(x, wall_top, x, wall_bottom, 1.0f, wall_color);
 
 	}
 
 	// Draw crosshair
-	int crosshair_size = 10;
-	int crosshair_thickness = 2;
+	int crosshair_size = 6;
+	int crosshair_thickness = 1;
 	int center_x = view_width / 2;
 	int center_y = view_height / 2;
 
@@ -131,11 +146,11 @@ void R_Render(void)
 		center_x, center_y + crosshair_size,
 		crosshair_thickness, WHITE);
 
-	draw_mini_map(3, RED, BLUE);
+	m_draw_mini_map(0, 0, MAP_WIDTH*10, MAP_HEIGHT*10, RED, GREEN);
 
 
-    if (flashbang_duration > 0.0f) {
-        flashbang(flashbang_duration);
+    if (e_flashbang_duration > 0.0f) {
+        e_flashbang(e_flashbang_duration);
     }
 
 	SwapBuffers(hdc);
@@ -155,22 +170,25 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 	return 0;
 }
 
+void init_player()
+{
+	player.pos.x = BLOCK_SIZE*2;
+	player.pos.y = BLOCK_SIZE*2;
+	player.angle = 0;
+	player.fov = PI / 2; // 60 fov
+	player.height = 10;
+	player.sensitivity = 0.003;
+	player.speed = 0.1;
+	player.width = 10;
+}
+
 int main()
 {
 
 	WNDCLASSA wcl;
 
 	memset(&wcl, 0, sizeof(wcl));
-
-	player.pos.x = 100;
-	player.pos.y = 100;
-	player.angle = 0;
-	player.fov = PI / 2; // 90 fov
-	player.height = 10;
-	player.sensitivity = 0.003;
-	player.speed = 0.5;
-	player.width = 10;
-
+	init_player();
 	RECT rect;
 	GetClientRect(window, &rect);
 	last_mouse_x = rect.right / 2;
@@ -198,16 +216,16 @@ int main()
 				TranslateMessage(&msg);
 			}
 		} else {
-			handle_mouse_movement();
+			i_handle_mouse_movement();
 			R_Render();
 
-			if (flashbang_duration > 0.0f) {
-				flashbang_duration -= 0.0004f; // Decrease by a small amount each frame
-				if (flashbang_duration < 0.0f) {
-					flashbang_duration = 0.0f;
+			if (e_flashbang_duration > 0.0f) {
+				e_flashbang_duration -= 0.0004f; // Decrease by a small amount each frame
+				if (e_flashbang_duration < 0.0f) {
+					e_flashbang_duration = 0.0f;
 				}
 
-				flash_color.alpha = flashbang_duration; // Update the alpha value
+				flash_color.alpha = e_flashbang_duration; // Update the alpha value
 			}
 		}
 	}

@@ -6,7 +6,7 @@ void R_Render(void)
 {
 	glClearColor(0, 0, 0, 1);
 	glClear(GL_COLOR_BUFFER_BIT);
-	load_map();
+	m_load_map();
 	glBegin(GL_QUADS);
 	for (int y = 0; y < MAP_HEIGHT; y++) {
 		for (int x = 0; x < MAP_WIDTH; x++) {
@@ -52,7 +52,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 		break;
 	case WM_KEYDOWN:
 		if (wparam == 'S' || wparam == 's')
-			save_map();
+			m_save_map();
 		break;
 	default:
 		return DefWindowProcA(hwnd, msg, wparam, lparam);

@@ -6,7 +6,12 @@ void HandleMouseClick(int x, int y)
 	int mapY = y / BLOCK_SIZE;
 
 	if (mapX >= 0 && mapX < MAP_WIDTH && mapY >= 0 && mapY < MAP_HEIGHT) {
-		map[mapY][mapX] = !map[mapY][mapX];
+		// map[mapY][mapX] = !map[mapY][mapX];
+		if (map[mapY][mapX].type == FLOOR) {
+			map[mapY][mapX].type = WALL;
+		} else if (map[mapY][mapX].type == WALL) {
+			map[mapY][mapX].type = FLOOR;
+		}
 	}
 }
 

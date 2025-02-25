@@ -1,6 +1,6 @@
 #include "ray.h"
 
-void load_map(void)
+void m_load_map(void)
 {
 	FILE *file = fopen("map.map", "rb");
 	if (file) {
@@ -9,7 +9,7 @@ void load_map(void)
 	}
 }
 
-void save_map(void)
+void m_save_map(void)
 {
 	FILE *file = fopen("map.map", "wb");
 	if (file) {
@@ -18,26 +18,28 @@ void save_map(void)
 	}
 }
 
-void draw_mini_map(int size, Color player_color, Color player_line)
+void m_draw_mini_map(int x, int y, int map_width, int map_height, Color player_color, Color player_line)
 {
-		// Draw mini-map
-		int map_size = WH / size;
-		Rect mini_map = {{0, 0}, map_size, map_size};
-		r_drawRect(&mini_map, BLACK);
-		r_drawMap(map, &mini_map);
+    // Calculate scale
+    float scale_x = (float)map_width / (MAP_WIDTH * BLOCK_SIZE);
+    float scale_y = (float)map_height / (MAP_HEIGHT * BLOCK_SIZE);
+    float scale = (scale_x < scale_y) ? scale_x : scale_y;  // Use the smaller scale to fit the map
 
-		// Draw player on mini-map
-		float scale = (float)map_size / (MAP_WIDTH * BLOCK_SIZE);
-		Rect mini_player;
-		mini_player.pos.x = mini_map.pos.x + player.pos.x * scale;
-		mini_player.pos.y = mini_map.pos.y + player.pos.y * scale;
-		mini_player.width = player.width * scale;
-		mini_player.height = player.height * scale;
-		r_drawRect(&mini_player, player_color);
+    // Draw mini-map
+    Rect mini_map = {{x, y}, map_width, map_height};
+    r_drawRect(&mini_map, BLACK);
+    r_drawMap(map, &mini_map);
 
-		// Draw player direction on mini-map
-		float dir_length = 20.0f * scale;
-		float dir_end_x = mini_player.pos.x + cosf(player.angle) * dir_length;
-		float dir_end_y = mini_player.pos.y + sinf(player.angle) * dir_length;
-		r_drawLine(mini_player.pos.x, mini_player.pos.y, dir_end_x, dir_end_y, 1.0f, player_line);
+    // Draw player on mini-map
+    float player_x = mini_map.pos.x + (player.pos.x / BLOCK_SIZE) * (map_width / MAP_WIDTH);
+    float player_y = mini_map.pos.y + (player.pos.y / BLOCK_SIZE) * (map_height / MAP_HEIGHT);
+    float player_size = 5.0f * scale;  // Adjust this value for desired player size on mini-map
+
+    r_drawPoint(player_x, player_y, player_size, player_color);
+
+    // Draw player direction on mini-map
+    float dir_length = 10.0f * scale;
+    float dir_end_x = player_x + cosf(player.angle) * dir_length;
+    float dir_end_y = player_y + sinf(player.angle) * dir_length;
+    r_drawLine(player_x, player_y, dir_end_x, dir_end_y, 1.0f, player_line);
 }

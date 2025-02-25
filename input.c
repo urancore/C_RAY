@@ -10,7 +10,7 @@ KeyBind key_bindings[] = {
     {VK_ESCAPE, quit_game, 		0, 0}		// ESC key
 };
 
-void handle_keys_event(void)
+void i_handle_keys_event(void)
 {
     int key_binds_list_size = sizeof(key_bindings) / sizeof(key_bindings[0]);
     for (int i = 0; i < key_binds_list_size; i++) {
@@ -27,7 +27,7 @@ void handle_keys_event(void)
     }
 }
 
-void handle_mouse_movement(void)
+void i_handle_mouse_movement(void)
 {
 	POINT mouse_pos;
 	GetCursorPos(&mouse_pos);
@@ -61,20 +61,32 @@ void handle_mouse_movement(void)
 	}
 }
 
-void move_player(float angle)
+void u_move_player(float angle)
 {
-	float dx = cosf(angle) * player.speed;
-	float dy = sinf(angle) * player.speed;
+    float dx = cosf(angle) * player.speed;
+    float dy = sinf(angle) * player.speed;
 
-	float new_x = player.pos.x + dx;
-	float new_y = player.pos.y + dy;
+    // Пробуем переместиться по горизонтали
+    float new_x = player.pos.x + dx;
+    char collision_x =
+        u_check_collision(new_x, player.pos.y) ||
+        u_check_collision(new_x + player.width - 1, player.pos.y) ||
+        u_check_collision(new_x, player.pos.y + player.height - 1) ||
+        u_check_collision(new_x + player.width - 1, player.pos.y + player.height - 1);
 
-	// check collision for all player corners
-	if (!check_collision(new_x, new_y) &&
-		!check_collision(new_x + player.width - 1, new_y) &&
-		!check_collision(new_x, new_y + player.height - 1) &&
-		!check_collision(new_x + player.width - 1, new_y + player.height - 1)) {
-		player.pos.x = new_x;
-		player.pos.y = new_y;
-	}
+    if (!collision_x) {
+        player.pos.x = new_x;
+    }
+
+    // Пробуем переместиться по вертикали
+    float new_y = player.pos.y + dy;
+    char collision_y =
+        u_check_collision(player.pos.x, new_y) ||
+        u_check_collision(player.pos.x + player.width - 1, new_y) ||
+        u_check_collision(player.pos.x, new_y + player.height - 1) ||
+        u_check_collision(player.pos.x + player.width - 1, new_y + player.height - 1);
+
+    if (!collision_y) {
+        player.pos.y = new_y;
+    }
 }

@@ -3,22 +3,22 @@
 
 void move_forward(void)
 {
-    move_player(player.angle);
+    u_move_player(player.angle);
 }
 
 void move_backward(void)
 {
-    move_player(player.angle + PI);
+    u_move_player(player.angle + PI);
 }
 
 void strafe_right(void)
 {
-    move_player(player.angle + PI/2);
+    u_move_player(player.angle + PI/2);
 }
 
 void strafe_left(void)
 {
-    move_player(player.angle - PI/2);
+    u_move_player(player.angle - PI/2);
 }
 
 void rotate_left(void)
@@ -40,7 +40,7 @@ void clip_cursor(void)
 
 void test_btn(void)
 {
-	flashbang_duration = 1.0f;
+	e_flashbang_duration = 1.0f;
 }
 
 void quit_game(void)
