@@ -1,12 +1,11 @@
 #include "ray.h"
-
+int movement_key_pressed = 0;
 KeyBind key_bindings[] = {
     {0x57, 		move_forward, 	1, 0},    	// W key
     {0x53, 		move_backward, 	1, 0},   	// S key
     {0x44, 		strafe_right, 	1, 0},    	// D key
     {0x41, 		strafe_left, 	1, 0},     	// A key
 	{0x45, 		clip_cursor, 	0, 0},		// E key курсор показывается через !!!!несколько (2) сек!!!! хз, ограничения winapi, может быть.
-	{0x46, 		test_btn,		0, 0},		// test_1234 F key
     {VK_ESCAPE, quit_game, 		0, 0}		// ESC key
 };
 
@@ -20,10 +19,20 @@ void i_handle_keys_event(void)
             if (key_bindings[i].is_continuous || !key_bindings[i].is_pressed) {
                 key_bindings[i].action();
                 key_bindings[i].is_pressed = 1;
+
+				if (key_bindings[i].action == move_forward ||
+                    key_bindings[i].action == move_backward ||
+                    key_bindings[i].action == strafe_right ||
+                    key_bindings[i].action == strafe_left) {
+                    movement_key_pressed = 1;
+                }
             }
         } else {  // Key is not pressed
             key_bindings[i].is_pressed = 0;
         }
+		if (!movement_key_pressed) {
+			player_walk = 0;
+		}
     }
 }
 
@@ -59,34 +68,4 @@ void i_handle_mouse_movement(void)
 		ClipCursor(NULL);
 		ShowCursor(TRUE);
 	}
-}
-
-void u_move_player(float angle)
-{
-    float dx = cosf(angle) * player.speed;
-    float dy = sinf(angle) * player.speed;
-
-    // Пробуем переместиться по горизонтали
-    float new_x = player.pos.x + dx;
-    char collision_x =
-        u_check_collision(new_x, player.pos.y) ||
-        u_check_collision(new_x + player.width - 1, player.pos.y) ||
-        u_check_collision(new_x, player.pos.y + player.height - 1) ||
-        u_check_collision(new_x + player.width - 1, player.pos.y + player.height - 1);
-
-    if (!collision_x) {
-        player.pos.x = new_x;
-    }
-
-    // Пробуем переместиться по вертикали
-    float new_y = player.pos.y + dy;
-    char collision_y =
-        u_check_collision(player.pos.x, new_y) ||
-        u_check_collision(player.pos.x + player.width - 1, new_y) ||
-        u_check_collision(player.pos.x, new_y + player.height - 1) ||
-        u_check_collision(player.pos.x + player.width - 1, new_y + player.height - 1);
-
-    if (!collision_y) {
-        player.pos.y = new_y;
-    }
 }

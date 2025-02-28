@@ -1,13 +1,12 @@
 #include "ray.h"
+#include "system.h"
 // DEFINES_type (Wall, Floor)
-#define D_W (GameObject){.type=WALL}
-#define D_F (GameObject){.type=FLOOR}
-// #define D_T (GameObject){.type=TRIGGER, .trigger_data= {.target_entity}}
-// #define D_D (GameObject){.type=DOOR, .door_data= {.is_locked = 0, .key_id = 0}}
+#define D_W (game_object_t){.type=WALL}
+#define D_F (game_object_t){.type=FLOOR}
+// #define D_T (game_object_t){.type=TRIGGER, .trigger_data= {.target_entity}}
+// #define D_D (game_object_t){.type=DOOR, .door_data= {.is_locked = 0, .key_id = 0}}
 
-Color flash_color;
-
-GameObject map[MAP_HEIGHT][MAP_WIDTH] = {
+game_object_t map[MAP_HEIGHT][MAP_WIDTH] = {
 	{D_W,D_W,D_W,D_W,D_W,D_W,D_W,D_W,D_W,D_W},
 	{D_W,D_F,D_F,D_W,D_F,D_F,D_W,D_F,D_W,D_W},
 	{D_W,D_F,D_F,D_F,D_F,D_F,D_F,D_F,D_F,D_W},
@@ -89,7 +88,6 @@ void R_Render(void)
 {
 	glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
 	glClearColor(0, 0, 0, 1);
 	glClear(GL_COLOR_BUFFER_BIT);
 
@@ -99,7 +97,6 @@ void R_Render(void)
 	r_drawSky(view_width, view_height);
 	r_drawGround(view_width, view_height);
 
-	i_handle_keys_event();
 
 	for (int i = 0; i < NUM_RAYS; i++) {
 
@@ -147,12 +144,10 @@ void R_Render(void)
 		crosshair_thickness, WHITE);
 
 	m_draw_mini_map(0, 0, MAP_WIDTH*10, MAP_HEIGHT*10, RED, GREEN);
-
-
-    if (e_flashbang_duration > 0.0f) {
-        e_flashbang(e_flashbang_duration);
-    }
-
+	i_handle_keys_event();
+	// update_game();
+	// cmd_print_buffer();
+	r_sprint(WW-200, WH-100, "ESC - for quit", 15, GREEN);
 	SwapBuffers(hdc);
 }
 
@@ -184,20 +179,12 @@ void init_player()
 
 int main()
 {
-
 	WNDCLASSA wcl;
-
 	memset(&wcl, 0, sizeof(wcl));
-	init_player();
-	RECT rect;
-	GetClientRect(window, &rect);
-	last_mouse_x = rect.right / 2;
 
 	wcl.lpfnWndProc = WndProc;
 	wcl.lpszClassName = "CRayWindow";
-
 	RegisterClassA(&wcl);
-
 	window = CreateWindowExA(0, "CRayWindow", "cray_v0b.exe", WS_OVERLAPPED | WS_SYSMENU | WS_CAPTION | WS_MINIMIZEBOX,
 			0, 0, WW, WH, 0, 0, 0, 0);
 
@@ -207,29 +194,27 @@ int main()
 	unsigned char running = 1;
 	MSG msg;
 
+	init_player();
+	init_font();
+
+	RECT rect;
+	GetClientRect(window, &rect);
+	last_mouse_x = rect.right / 2;
+
 	while(running) {
 		if(PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
-			if(msg.message == WM_QUIT)
+			if(msg.message == WM_QUIT) {
 				running = 0;
-			else {
+			} else {
 				DispatchMessage(&msg);
 				TranslateMessage(&msg);
 			}
 		} else {
 			i_handle_mouse_movement();
 			R_Render();
-
-			if (e_flashbang_duration > 0.0f) {
-				e_flashbang_duration -= 0.0004f; // Decrease by a small amount each frame
-				if (e_flashbang_duration < 0.0f) {
-					e_flashbang_duration = 0.0f;
-				}
-
-				flash_color.alpha = e_flashbang_duration; // Update the alpha value
-			}
 		}
 	}
-
+	sys_message_box('i', "U game over");
 	GL_Shutdown();
 	DestroyWindow(window);
 	return 0;

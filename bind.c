@@ -4,21 +4,29 @@
 void move_forward(void)
 {
     u_move_player(player.angle);
+	player_walk = 1;
+	// cmd_append_buffer("move forward\n", GREEN);
 }
 
 void move_backward(void)
 {
     u_move_player(player.angle + PI);
+	player_walk = 1;
+	// cmd_append_buffer("move backward\n", RED);
 }
 
 void strafe_right(void)
 {
     u_move_player(player.angle + PI/2);
+	player_walk = 1;
+	// cmd_append_buffer("strafe right\n", YELLOW);
 }
 
 void strafe_left(void)
 {
     u_move_player(player.angle - PI/2);
+	player_walk = 1;
+	// cmd_append_buffer("strafe left\n", BLUE);
 }
 
 void rotate_left(void)
@@ -36,11 +44,6 @@ void rotate_right(void)
 void clip_cursor(void)
 {
 	cursor_enabled = !cursor_enabled;
-}
-
-void test_btn(void)
-{
-	e_flashbang_duration = 1.0f;
 }
 
 void quit_game(void)

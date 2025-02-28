@@ -8,7 +8,10 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdarg.h>
 
+#include "system.h"
+#include "zone.h"
 #include "bind.h"
 
 #define WHITE         (Color){1.0f, 1.0f, 1.0f, 1.0f}
@@ -36,12 +39,13 @@
 #define C_RAY_FLOOR   (Color){0.38f, 0.27f, 0.18f, 1.0f}  // Dark brown
 #define C_RAY_CEILING (Color){0.07f, 0.07f, 0.14f, 1.0f}  // Very dark blue (almost black)
 
+
 typedef enum {
 	WALL,
 	FLOOR,
 	DOOR,
 	TRIGGER
-} EntityType;
+} entity_type_t;
 
 // Данные специфичные для двери
 typedef struct {
@@ -71,22 +75,22 @@ typedef struct {
 	Position pos;
 	float width;
 	float height;
-} Rect;
+} rect_t;
 
 typedef struct {
 	Position pos;
 	float radius;
-} Circle;
+} circle_t;
 
 typedef struct {
-	EntityType type;
+	entity_type_t type;
 	union {
         DoorData    door_data;      // Данные двери (если type == DOOR)
         TriggerData trigger_data;   // Данные триггера (если type == TRIGGER)
 		// WallData	wall_data;		// Данные стены	(если type == WALL)
 		// FloorData	floor_data;		// Данные стены	(если type == FLOOR)
     };
-} GameObject;
+} game_object_t;
 
 
 typedef struct {
@@ -99,6 +103,7 @@ typedef struct {
 	float height;
 } Player;
 
+
 #define MAP_HEIGHT  30
 #define MAP_WIDTH   10
 #define BLOCK_SIZE 20
@@ -110,15 +115,21 @@ typedef struct {
 
 // global vars declared in global.c
 // keep in sync
-extern GameObject map[MAP_HEIGHT][MAP_WIDTH];
+extern game_object_t map[MAP_HEIGHT][MAP_WIDTH];
 extern HWND window;
 extern HDC hdc;
 extern HGLRC hrc;
 
+extern GLuint shaderProgram;
+extern GLuint VAO;
+extern GLuint VBO;
+extern GLuint fontOffset;
+
 extern int last_mouse_x;
 extern char cursor_enabled;
 extern KeyBind key_bindings[];
-extern float e_flashbang_duration; // test_1234
+
+extern unsigned short player_walk;
 
 extern Player player;
 
@@ -141,13 +152,22 @@ int u_check_collision(float x, float y);
 void u_move_player(float angle);
 
 // renderer.c
-void r_drawRect(Rect *rect, Color color);
+void set_color(Color color);
+void r_drawrect_t(rect_t *rect, Color color);
 void r_drawPoint(int x, int y, int size, Color color);
 void r_drawLine(int start_x, int start_y, int end_x, int end_y, float line_size, Color color);
-void r_drawMap(GameObject map[MAP_HEIGHT][MAP_WIDTH], Rect* mapArea);
+void r_drawMap(game_object_t map[MAP_HEIGHT][MAP_WIDTH], rect_t* mapArea);
 void r_drawSky(int view_width, int view_height);
 void r_drawGround(int view_width, int view_height);
+void r_drawChar(int x, int y, char c);
 
-void e_flashbang(float flash_duration); // test_1234
+// sound.c
+void play_sound(const char *filename);
+void stop_sound();
+void update_game();
+
+//text.c
+void init_font(void);
+void r_sprint(int x, int y, char *str, size_t len_str, Color color);
 
 #endif /* _RAY_H */

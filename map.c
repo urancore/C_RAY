@@ -26,8 +26,8 @@ void m_draw_mini_map(int x, int y, int map_width, int map_height, Color player_c
     float scale = (scale_x < scale_y) ? scale_x : scale_y;  // Use the smaller scale to fit the map
 
     // Draw mini-map
-    Rect mini_map = {{x, y}, map_width, map_height};
-    r_drawRect(&mini_map, BLACK);
+    rect_t mini_map = {{x, y}, map_width, map_height};
+    r_drawrect_t(&mini_map, BLACK);
     r_drawMap(map, &mini_map);
 
     // Draw player on mini-map

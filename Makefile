@@ -4,9 +4,9 @@ DEPFLAGS = -MT $@ -MMD -MP -MF $(D)/$*.d
 
 O = out
 D = $(O)/.deps
-LIB = -lopengl32 -lgdi32 -luser32
+LIB = -lopengl32 -lgdi32 -luser32 -lwinmm
 
-SRC_COMMON = bind.c input.c main.c global.c map.c misc.c renderer.c
+SRC_COMMON = bind.c input.c main.c global.c map.c misc.c renderer.c text.c cmd.c sound.c sys_win.c zone.c
 SRC_RAY = ray.c
 SRC_EDITOR = editor.c
 

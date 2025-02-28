@@ -9,5 +9,6 @@ HGLRC hrc = 0;
 
 int last_mouse_x = 0;
 char cursor_enabled = 1;
-float e_flashbang_duration = 0.0f; // test_1234
+GLuint fontOffset;
 Player player = {0};
+unsigned short player_walk = 0;

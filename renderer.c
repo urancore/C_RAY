@@ -1,10 +1,18 @@
 #include "ray.h"
 
+
+void set_color(Color color)
+{
+	glColor4f((GLfloat)color.r, (GLfloat)color.g, (GLfloat)color.b, (GLfloat)color.alpha);
+}
+
+
 static void r_drawQuad(int x, int y, int width, int height, Color color)
 {
 	if (width <= 0 || height <= 0) return; // error
 
-	glColor4f((GLfloat)color.r, (GLfloat)color.g, (GLfloat)color.b, (GLfloat)color.alpha);
+	set_color(color);
+
 	glBegin(GL_QUADS);
 	glVertex2i((GLint)x, (GLint)y);
 	glVertex2i((GLint)x + (GLint)width, (GLint)y);
@@ -13,7 +21,7 @@ static void r_drawQuad(int x, int y, int width, int height, Color color)
 	glEnd();
 }
 
-void r_drawRect(Rect *rect, Color color)
+void r_drawrect_t(rect_t *rect, Color color)
 {
 	r_drawQuad(rect->pos.x, rect->pos.y,
 			rect->width, rect->height,
@@ -38,16 +46,16 @@ void r_drawLine(int start_x, int start_y, int end_x, int end_y, float line_size,
 	glEnd();
 }
 
-void r_drawMap(GameObject map[MAP_HEIGHT][MAP_WIDTH], Rect* mapArea)
+void r_drawMap(game_object_t map[MAP_HEIGHT][MAP_WIDTH], rect_t* mapArea)
 {
     Color color;
     float scale_x = (float)mapArea->width / MAP_WIDTH;
     float scale_y = (float)mapArea->height / MAP_HEIGHT;
     float scale = (scale_x < scale_y) ? scale_x : scale_y;
 
-    for (int y = 0; y < MAP_HEIGHT; y++) {
-        for (int x = 0; x < MAP_WIDTH; x++) {
-			switch (map[y][x].type) {
+    for (int map_y = 0; map_y < MAP_HEIGHT; map_y++) {
+        for (int map_x = 0; map_x < MAP_WIDTH; map_x++) {
+			switch (map[map_y][map_x].type) {
 			case FLOOR:
 				color = C_RAY_FLOOR;
 				break;
@@ -74,8 +82,8 @@ void r_drawMap(GameObject map[MAP_HEIGHT][MAP_WIDTH], Rect* mapArea)
             //     color.b = 0.5f;
             // }
 
-            float draw_x = mapArea->pos.x + x * scale;
-            float draw_y = mapArea->pos.y + y * scale;
+            float draw_x = mapArea->pos.x + map_x * scale;
+            float draw_y = mapArea->pos.y + map_y * scale;
 
             r_drawPoint(draw_x, draw_y, scale, color);
         }
@@ -84,32 +92,22 @@ void r_drawMap(GameObject map[MAP_HEIGHT][MAP_WIDTH], Rect* mapArea)
 
 void r_drawSky(int view_width, int view_height)
 {
-	Rect sky = {{0, 0}, view_width, view_height / 2};
+	rect_t sky = {{0, 0}, view_width, view_height / 2};
 
-	r_drawRect(&sky, C_RAY_CEILING);
+	r_drawrect_t(&sky, C_RAY_CEILING);
 }
 
 void r_drawGround(int view_width, int view_height)
 {
-	Rect ground = {{0, view_height / 2}, view_width, view_height / 2};
-	r_drawRect(&ground, C_RAY_FLOOR);
+	rect_t ground = {{0, view_height / 2}, view_width, view_height / 2};
+	r_drawrect_t(&ground, C_RAY_FLOOR);
 }
 
-
-void e_flashbang(float flash_duration) // test_1234
+void r_drawChar(int x, int y, char c)
 {
-	(void)flash_duration;
-
-	Rect rect;
-	rect.pos.x = 0;
-	rect.pos.y = 0;
-	rect.width = WW;
-	rect.height = WH;
-
-	Color color;
-	color.r = 1.0f;
-	color.g = 1.0f;
-	color.b = 1.0f;
-	color.alpha = flash_duration;
-	r_drawRect(&rect, color);
+	glRasterPos2i(x, y);
+	glPushAttrib(GL_LIST_BIT);
+	glListBase(fontOffset);
+	glCallLists(1, GL_UNSIGNED_BYTE, &c);
+	glPopAttrib();
 }

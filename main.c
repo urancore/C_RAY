@@ -2,15 +2,14 @@
 
 void HandleMouseClick(int x, int y)
 {
-	int mapX = x / BLOCK_SIZE;
-	int mapY = y / BLOCK_SIZE;
+	int map_x = x / BLOCK_SIZE;
+	int map_y = y / BLOCK_SIZE;
 
-	if (mapX >= 0 && mapX < MAP_WIDTH && mapY >= 0 && mapY < MAP_HEIGHT) {
-		// map[mapY][mapX] = !map[mapY][mapX];
-		if (map[mapY][mapX].type == FLOOR) {
-			map[mapY][mapX].type = WALL;
-		} else if (map[mapY][mapX].type == WALL) {
-			map[mapY][mapX].type = FLOOR;
+	if (map_x >= 0 && map_x < MAP_WIDTH && map_y >= 0 && map_y < MAP_HEIGHT) {
+		if (map[map_y][map_x].type == FLOOR) {
+			map[map_y][map_x].type = WALL;
+		} else if (map[map_y][map_x].type == WALL) {
+			map[map_y][map_x].type = FLOOR;
 		}
 	}
 }
