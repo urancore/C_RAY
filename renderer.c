@@ -90,6 +90,17 @@ void r_drawMap(game_object_t map[MAP_HEIGHT][MAP_WIDTH], rect_t* mapArea)
     }
 }
 
+void r_drawChar(int x, int y, char c)
+{
+	glRasterPos2i(x, y);
+	glPushAttrib(GL_LIST_BIT);
+	glListBase(fontOffset);
+	glCallLists(1, GL_UNSIGNED_BYTE, &c);
+	glPopAttrib();
+}
+
+
+// ========= custom =========
 void r_drawSky(int view_width, int view_height)
 {
 	rect_t sky = {{0, 0}, view_width, view_height / 2};
@@ -103,11 +114,19 @@ void r_drawGround(int view_width, int view_height)
 	r_drawrect_t(&ground, C_RAY_FLOOR);
 }
 
-void r_drawChar(int x, int y, char c)
+void r_drawCrosshair(int crosshair_size, int crosshair_thickness, Color color)
 {
-	glRasterPos2i(x, y);
-	glPushAttrib(GL_LIST_BIT);
-	glListBase(fontOffset);
-	glCallLists(1, GL_UNSIGNED_BYTE, &c);
-	glPopAttrib();
+	// Draw crosshair
+	int center_x = view_width / 2;
+	int center_y = view_height / 2;
+
+	// Horizontal line
+	r_drawLine(center_x - crosshair_size, center_y,
+		center_x + crosshair_size, center_y,
+		crosshair_thickness, color);
+
+	// Vertical line
+	r_drawLine(center_x, center_y - crosshair_size,
+		center_x, center_y + crosshair_size,
+		crosshair_thickness, color);
 }

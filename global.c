@@ -12,3 +12,6 @@ char cursor_enabled = 1;
 GLuint fontOffset;
 Player player = {0};
 unsigned short player_walk = 0;
+
+int view_width = WW;
+int view_height = WH;

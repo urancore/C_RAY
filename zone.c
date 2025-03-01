@@ -35,7 +35,7 @@ void *Z_Malloc(int size)
     // do {
     //     if(rover == start) {
     //         // перебрали все блоки и не нашли нужного
-    //         sys_error("Z_Malloc: failed on allocation of %i bytes", size);
+    //         Sys_Error("Z_Malloc: failed on allocation of %i bytes", size);
     //     }
 
     //     if(rover->used) {

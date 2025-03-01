@@ -10,9 +10,14 @@
 #include <stdlib.h>
 #include <stdarg.h>
 
-#include "system.h"
+// макс. аргументов коммандной строки
+#define MAX_NUM_ARGVS 50
+
+#include "common.h"
+
 #include "zone.h"
 #include "bind.h"
+#include "system.h" // скомпиль
 
 #define WHITE         (Color){1.0f, 1.0f, 1.0f, 1.0f}
 #define BLACK         (Color){0.0f, 0.0f, 0.0f, 1.0f}
@@ -133,6 +138,9 @@ extern unsigned short player_walk;
 
 extern Player player;
 
+extern int view_width;
+extern int view_height;
+
 // input.c
 void i_handle_keys_event(void);
 void i_handle_mouse_movement(void);
@@ -160,7 +168,7 @@ void r_drawMap(game_object_t map[MAP_HEIGHT][MAP_WIDTH], rect_t* mapArea);
 void r_drawSky(int view_width, int view_height);
 void r_drawGround(int view_width, int view_height);
 void r_drawChar(int x, int y, char c);
-
+void r_drawCrosshair(int crosshair_size, int crosshair_thickness, Color color);
 // sound.c
 void play_sound(const char *filename);
 void stop_sound();
@@ -170,4 +178,18 @@ void update_game();
 void init_font(void);
 void r_sprint(int x, int y, char *str, size_t len_str, Color color);
 
+// R_renderer.c
+void R_Render(void);
+float R_CastRay(float angle); // че за ошибка
+
+// initfuncs.c
+void init_player(void);
+
+
+// game.c
+void Game_Initialize(void);
+void Game_Update(void);
+void Game_Shutdown(void);
+
+// sys_win.c
 #endif /* _RAY_H */
