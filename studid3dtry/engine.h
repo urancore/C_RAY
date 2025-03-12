@@ -1,16 +1,36 @@
-#include <math.h>
 #include <string.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-// может сначала коммит сделать? конечно ща не пиши ниче проверь код на рефакторинг и коммит сделаю
-// это при запуске движка структура будет юзаться
+#define MAX_NUM_ARGVS   64
+
+#include "common.h"
+#include "vid.h"
+#include "system.h"
+#include "zone.h"
+
 typedef struct
 {
-
+    // директория игры
+    char *basedir;
+    // для аллокаторов памяти
+    void *membase;
+    int memsize;
 } engineparms_t;
 
-// телепортация эт че
+extern engineparms_t engine_parms;
 
-// это типа cray но 3d рендеринг
+extern qboolean engine_initialized;
+extern double engine_frametime;
+extern double realtime;
+
+void Engine_Init(engineparms_t *parms);
+void Engine_Shutdown(void);
+
+// engine frame будет вызываться каждый игровой кадр
+void Engine_Frame(float time);
+
+#ifdef _WIN32
+typedef enum {MS_WINDOWED, MS_FULLSCREEN, MS_FULLDIB, MS_UNINIT} modestate_t;
+#endif

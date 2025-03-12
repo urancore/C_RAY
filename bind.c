@@ -1,6 +1,25 @@
 #include "ray.h"
 
 
+
+KeyBind key_bindings[MAX_KEY_BINDINGS];
+int num_key_bindings = 0;
+
+void bind_key(int key, void (*key_func)(), int is_continuous, int is_pressed)
+{
+    if (num_key_bindings < MAX_KEY_BINDINGS) {
+        key_bindings[num_key_bindings].key_code = key;
+        key_bindings[num_key_bindings].action = key_func;
+        key_bindings[num_key_bindings].is_continuous = is_continuous;
+        key_bindings[num_key_bindings].is_pressed = is_pressed;
+        num_key_bindings++;
+    } else {
+        Sys_Error("max binds error");
+    }
+}
+
+
+// bind funcs
 void move_forward(void)
 {
     u_move_player(player.angle);

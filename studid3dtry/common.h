@@ -17,4 +17,4 @@ int COM_CheckParm(char *parm);
 /*
  * Инициализировать парсер аргументов
 */
-void COM_InitArgv(int argc, char **argv)
+void COM_InitArgv(int argc, char **argv);

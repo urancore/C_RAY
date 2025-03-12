@@ -1,3 +1,6 @@
+#define C_RAY_KEYBOARD_EVENT 0
+#define C_RAY_MOUSE_EVENT 1
+
 typedef enum
 {
     ev_keydown,
@@ -8,7 +11,11 @@ typedef enum
 typedef struct
 {
     evtype_t	type;
-    int		data1;		// keys / mouse buttons
-    int		data2;		// mouse x move
-    int		data3;		// mouse y move
+    int			key;	// keys / mouse buttons
+    int			x;		// mouse x move
+    int			y;		// mouse y move
 } event_t;
+
+
+void process_event(event_t event);
+void get_events(event_t *events_buffer);

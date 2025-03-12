@@ -20,7 +20,7 @@ float R_CastRay(float angle)
 
 	float ray_x = player.pos.x + player.width / 2;
 	float ray_y = player.pos.y + player.height / 2;
-    // что нужно ещё добавить? перекинуть функции по файлам и новые функции инициализировать в ray.h
+
 	float x_step = (cos_a >= 0) ? 1 : -1;
 	float y_step = (sin_a >= 0) ? 1 : -1;
 
@@ -83,9 +83,8 @@ void R_Render(void)
 		if (wall_top < 0) wall_top = 0;
 		if (wall_bottom >= view_height) wall_bottom = view_height - 1;
 
-
-		float shade = 1.0f - fminf(distance / 500.0f, 0.8f);
 		Color wall_color = C_RAY_WALL;
+		float shade = 1.0f - fminf(distance / 500.0f, 0.8f);
 
 		wall_color.r *= shade;
 		wall_color.g *= shade;
@@ -96,10 +95,8 @@ void R_Render(void)
 
 	}
 
-
 	m_draw_mini_map(0, 0, MAP_WIDTH*10, MAP_HEIGHT*10, RED, GREEN);
-	i_handle_keys_event();
 	r_drawCrosshair(6, 1, RED);
-	r_sprint(WW-200, WH-100, "ESC - for quit", 15, GREEN);
+	r_drawHud();
 	SwapBuffers(hdc);
 }

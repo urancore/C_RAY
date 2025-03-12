@@ -19,14 +19,14 @@ void stop_sound()
     sound_is_playing = 0;
 }
 
-void update_game()
-{
-    if (player_walk == 1 && !sound_is_playing) {
-        play_sound("assets/sound/walk/w1.wav");
-    } else if (sound_is_playing == 1 && player_walk == 0) {
-        double elapsed_time = (double)(clock() - sound_start_time) / CLOCKS_PER_SEC;
-        if (elapsed_time >= sound_duration) {
-            stop_sound();
-        }
-    }
-} // прототип, слишком плохо
+// void update_game()
+// {
+//     if (player_walk == 1 && !sound_is_playing) {
+//         play_sound("assets/sound/walk/w1.wav");
+//     } else if (sound_is_playing == 1 && player_walk == 0) {
+//         double elapsed_time = (double)(clock() - sound_start_time) / CLOCKS_PER_SEC;
+//         if (elapsed_time >= sound_duration) {
+//             stop_sound();
+//         }
+//     }
+// } // прототип, слишком плохо

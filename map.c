@@ -27,13 +27,13 @@ void m_draw_mini_map(int x, int y, int map_width, int map_height, Color player_c
 
     // Draw mini-map
     rect_t mini_map = {{x, y}, map_width, map_height};
-    r_drawrect_t(&mini_map, BLACK);
+    r_drawRect(&mini_map, BLACK);
     r_drawMap(map, &mini_map);
 
     // Draw player on mini-map
     float player_x = mini_map.pos.x + (player.pos.x / BLOCK_SIZE) * (map_width / MAP_WIDTH);
     float player_y = mini_map.pos.y + (player.pos.y / BLOCK_SIZE) * (map_height / MAP_HEIGHT);
-    float player_size = 5.0f * scale;  // Adjust this value for desired player size on mini-map
+    float player_size = 10.0f * scale;  // Adjust this value for desired player size on mini-map
 
     r_drawPoint(player_x, player_y, player_size, player_color);
 

@@ -5,29 +5,26 @@ DEPFLAGS = -MT $@ -MMD -MP -MF $(D)/$*.d
 O = out
 D = $(O)/.deps
 LIB = -lkernel32 -luser32
-SRC = sys_win.c
+SRC = sys_win.c engine.c common.c zone.c gl_vidnt.c
 
-BIN_RAY = $(O)/stupid3dtry.exe
+BIN = $(O)/stupid3dtry.exe
 
-OBJS_COMMON = $(SRC:%.c=$(O)/%.o)
+OBJS = $(SRC:%.c=$(O)/%.o)
 DEPS = $(SRC:%.c=$(D)/%.d)
 
 .PHONY: all clean
 
-all: $(D) $(BIN_RAY)
-	$(BIN_RAY)
+all: $(D) $(BIN)
+	$(BIN)
 
 clean:
-	rm -f $(OBJS_COMMON) $(OBJS_RAY) $(OBJS_EDITOR) $(DEPS) $(BIN)
+	rm -f $(OBJS_) $(DEPS) $(BIN)
 
 $(D):
 	mkdir -p $(D)
 
-$(BIN_RAY): $(OBJS_COMMON) $(OBJS_RAY)
-	$(CC) $(CFLAGS) $(OBJS_COMMON) $(OBJS_RAY) $(LIB) -o $(BIN_RAY)
-
-$(BIN_EDITOR): $(OBJS_COMMON) $(OBJS_EDITOR)
-	$(CC) $(CFLAGS) $(OBJS_COMMON) $(OBJS_EDITOR) $(LIB) -o $(BIN_EDITOR)
+$(BIN): $(OBJS)
+	$(CC) $(CFLAGS) $(OBJS) -Wl,-subsystem,windows $(LIB) -o $(BIN)
 
 $(O)/%.o: %.c $(D)/%.d
 	$(CC) $(DEPFLAGS) $(CFLAGS) -c $< -o $@

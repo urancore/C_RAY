@@ -54,6 +54,7 @@ int main()
 			Game_Update();
         }
     }
+
 	Game_Shutdown();
 	window_destroy();
 	return 0;

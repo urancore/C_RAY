@@ -15,6 +15,7 @@
 
 #include "common.h"
 
+#include "event.h"
 #include "zone.h"
 #include "bind.h"
 #include "system.h" // скомпиль
@@ -35,7 +36,7 @@
 #define LIME          (Color){0.75f, 1.0f, 0.0f, 1.0f}
 #define TEAL          (Color){0.0f, 0.5f, 0.5f, 1.0f}
 #define NAVY          (Color){0.0f, 0.0f, 0.5f, 1.0f}
-
+#define DARK_GRAY     (Color){0.25f, 0.25f, 0.25f, 1.0f}
 
 #define C_RAY_GROUND  (Color){0.0f, 0.5f, 0.0f, 1.0f}
 #define C_RAY_SKY     (Color){0.5f, 0.8f, 1.0f, 1.0f}
@@ -113,10 +114,10 @@ typedef struct {
 #define MAP_WIDTH   10
 #define BLOCK_SIZE 20
 
-#define WW 1024
-#define WH 512
+#define WW 1300
+#define WH 700
 
-#define NUM_RAYS 1024
+#define NUM_RAYS 2400
 
 // global vars declared in global.c
 // keep in sync
@@ -133,6 +134,7 @@ extern GLuint fontOffset;
 extern int last_mouse_x;
 extern char cursor_enabled;
 extern KeyBind key_bindings[];
+extern event_t g_Event;
 
 extern unsigned short player_walk;
 
@@ -142,8 +144,8 @@ extern int view_width;
 extern int view_height;
 
 // input.c
-void i_handle_keys_event(void);
-void i_handle_mouse_movement(void);
+void i_handle_key_event(event_t event);
+void i_handle_mouse_event(event_t event);
 
 // main.c
 void HandleMouseClick(int x, int y);
@@ -161,18 +163,19 @@ void u_move_player(float angle);
 
 // renderer.c
 void set_color(Color color);
-void r_drawrect_t(rect_t *rect, Color color);
+void r_drawRect(rect_t *rect, Color color);
 void r_drawPoint(int x, int y, int size, Color color);
 void r_drawLine(int start_x, int start_y, int end_x, int end_y, float line_size, Color color);
+void r_drawCircle(int x, int y, int radius, Color color);
 void r_drawMap(game_object_t map[MAP_HEIGHT][MAP_WIDTH], rect_t* mapArea);
 void r_drawSky(int view_width, int view_height);
 void r_drawGround(int view_width, int view_height);
 void r_drawChar(int x, int y, char c);
 void r_drawCrosshair(int crosshair_size, int crosshair_thickness, Color color);
+
 // sound.c
 void play_sound(const char *filename);
 void stop_sound();
-void update_game();
 
 //text.c
 void init_font(void);
@@ -184,12 +187,14 @@ float R_CastRay(float angle); // че за ошибка
 
 // initfuncs.c
 void init_player(void);
-
+void init_binds(void);
 
 // game.c
 void Game_Initialize(void);
 void Game_Update(void);
 void Game_Shutdown(void);
 
+// hud.c
+void r_drawHud();
 // sys_win.c
 #endif /* _RAY_H */
