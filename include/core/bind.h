@@ -1,15 +1,17 @@
 #ifndef _BIND_H
 #define _BIND_H
 
+
+
 #define MAX_KEY_BINDINGS 124
 
-typedef struct
-{
+typedef struct {
 	int key_code;
     void (*action)(void);
     char is_continuous;
 	char is_pressed;
 } KeyBind;
+
 
 extern KeyBind key_bindings[MAX_KEY_BINDINGS];
 extern int num_key_bindings;

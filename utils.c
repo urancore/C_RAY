@@ -1,5 +1,10 @@
-#include "ray.h"
+#include "include/core/core_types.h"
+#include "include/game/game.h"
 
+void set_color(Color color)
+{
+	glColor4f((GLfloat)color.r, (GLfloat)color.g, (GLfloat)color.b, (GLfloat)color.alpha);
+}
 
 int u_check_collision(float x, float y)
 {

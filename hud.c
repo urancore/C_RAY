@@ -1,4 +1,7 @@
-#include "ray.h"
+#include "include/core/core_types.h"
+#include "include/rendering/renderer.h"
+#include "include/rendering/hud.h"
+#include "include/globals.h"
 #include <math.h>
 
 #define HUD_HEIGHT 120

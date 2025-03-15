@@ -1,4 +1,8 @@
-#include "ray.h"
+#include "include/core/core_types.h"
+#include "include/system/win_system.h"
+#include "include/system/input.h"
+#include "include/core/event.h"
+#include "include/globals.h"
 
 void process_event(event_t event)
 {
@@ -12,6 +16,7 @@ void process_event(event_t event)
             break;
     }
 }
+
 void get_events(event_t *events_buffer)
 {
     // Handle keyboard events

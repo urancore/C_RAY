@@ -1,5 +1,11 @@
-#include "ray.h"
-
+#include "include/system/win_system.h"
+#include "include/game/game.h"
+#include "include/core/event.h"
+#include "include/globals.h"
+#include "include/utils/initfuncs.h"
+#include "include/rendering/renderer.h"
+#include "include/rendering/R_renderer.h"
+#include "include/text/text.h"
 
 void Game_Initialize(void)
 {

@@ -1,4 +1,8 @@
-#include "ray.h"
+#include "include/core/core_types.h"
+#include "include/globals.h"
+#include "include/core/event.h"
+#include "include/core/bind.h"
+
 int movement_key_pressed = 0;
 
 void i_handle_key_event(event_t event)

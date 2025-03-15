@@ -1,4 +1,7 @@
-#include "ray.h"
+#include "include/core/core_types.h"
+#include "include/core/player.h"
+#include "include/system/win_system.h"
+#include "include/globals.h"
 
 // global vars externed in ray.h
 // keep in sync

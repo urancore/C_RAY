@@ -1,10 +1,7 @@
-#include "ray.h"
-
-
-void set_color(Color color)
-{
-	glColor4f((GLfloat)color.r, (GLfloat)color.g, (GLfloat)color.b, (GLfloat)color.alpha);
-}
+#include "include/core/core_types.h"
+#include "include/globals.h"
+#include "include/core/entity.h"
+#include "include/utils/utils.h"
 
 
 static void r_drawQuad(int x, int y, int width, int height, Color color)

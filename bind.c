@@ -1,6 +1,7 @@
-#include "ray.h"
-
-
+#include "include/core/core_types.h"
+#include "include/system/input.h"
+#include "include/utils/utils.h"
+#include "include/globals.h"
 
 KeyBind key_bindings[MAX_KEY_BINDINGS];
 int num_key_bindings = 0;

@@ -1,5 +1,9 @@
-#include "ray.h"
-#include "text.h"
+#include "include/core/core_types.h"
+#include "include/globals.h"
+#include "include/text/text.h"
+#include "include/utils/utils.h"
+#include "include/rendering/renderer.h"
+#include "include/text/font.h"
 
 
 #define char_size_x 10
