@@ -9,7 +9,7 @@
 
 void Game_Initialize(void)
 {
-	window_initialize("Cray-v1.exe");
+	window_initialize("Cray.exe");
 	GL_Init();
 
 	init_player();
@@ -18,7 +18,6 @@ void Game_Initialize(void)
 
 	window_show();
 
-	//mouse потом сделать функцию отдельную
 	RECT rect;
 	GetClientRect(window, &rect);
 	last_mouse_x = rect.right / 2;

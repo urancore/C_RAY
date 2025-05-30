@@ -1,4 +1,8 @@
-#include "ray.h"
+#include "include/core/core_types.h"
+#include "include/core/player.h"
+#include "include/game/map.h"
+#include "include/rendering/renderer.h"
+#include "include/globals.h"
 
 void m_load_map(void)
 {

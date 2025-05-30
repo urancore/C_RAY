@@ -1,17 +1,9 @@
-/*
- * реализация системных функций и точки входа специально для винды
-*/
+/* autor: https://github.com/vasyan5546231 */
 
-#include "ray.h"
 
-// static double pfreq;
-// static double curtime = 0.0;
-// static double lastcurtime = 0.0;
-// static int lowshift;
-// qboolean console = false;
-// HANDLE hinput, houtput;
+#include "include/core/core_types.h"
+#include "include/globals.h"
 
-// void Sys_InitFloatTime(void);
 
 void Sys_Error(char* fmt, ...)
 {

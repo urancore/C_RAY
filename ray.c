@@ -1,7 +1,8 @@
-#include "ray.h"
-#include "system.h"
+#include "include/core/core_types.h"
+#include "include/core/entity.h"
+#include "include/game/game.h"
+#include "include/system/win_system.h"
 
-// это точно сработает? чекни sys_win и system че ты афк? скомпиль для теста
 #define D_W (game_object_t){.type=WALL}
 #define D_F (game_object_t){.type=FLOOR}
 
@@ -41,7 +42,7 @@ game_object_t map[MAP_HEIGHT][MAP_WIDTH] = {
 	{D_W,D_W,D_W,D_W,D_W,D_W,D_W,D_W,D_W,D_W},
 };
 
-// TODO: перенести в sys_win.c и sys_linux.c
+
 int main()
 {
 	Game_Initialize();

@@ -1,5 +1,5 @@
 .vscode/
-out/
+out/**.o
+out/.deps/**.d
 devlogs.txt
-assets/sound/walk
 stupid3dtry/

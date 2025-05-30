@@ -1,4 +1,9 @@
-#include "ray.h"
+#include "include/core/core_types.h"
+#include "include/rendering/R_renderer.h"
+#include "include/rendering/renderer.h"
+#include "include/rendering/hud.h"
+#include "include/game/map.h"
+#include "include/globals.h"
 
 /*
 * 0 - Fill window
