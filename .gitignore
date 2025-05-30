@@ -1,5 +1,3 @@
 .vscode/
-out/**.o
-out/.deps/**.d
-devlogs.txt
-stupid3dtry/
+src/out
+
